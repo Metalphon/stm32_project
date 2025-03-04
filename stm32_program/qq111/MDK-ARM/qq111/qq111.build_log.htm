@@ -1,0 +1,181 @@
+<html>
+<body>
+<pre>
+<h1>�Vision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: ��Vision V5.38.0.0
+Copyright (C) 2022 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: 1 1, 1, LIC=VGXG8-3STQ8-Y8WFK-Z6MPP-5NI0Z-MHAWQ
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Plus  Version: 5.38.0.0
+Toolchain Path:  D:\Software\Work_software\Direct_coding\keil\ARM\ARMCLANG\Bin
+C Compiler:      ArmClang.exe V6.19
+Assembler:       Armasm.exe V6.19
+Linker/Locator:  ArmLink.exe V6.19
+Library Manager: ArmAr.exe V6.19
+Hex Converter:   FromElf.exe V6.19
+CPU DLL:         SARMCM3.DLL V5.38.0.0
+Dialog DLL:      DCM.DLL V1.17.5.0
+Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V3.1.0.0
+Dialog DLL:      TCM.DLL V1.56.4.0
+ 
+<h2>Project:</h2>
+E:\Code\stm32_project\stm32_program\qq111\MDK-ARM\qq111.uvprojx
+Project File Date:  11/21/2024
+
+<h2>Output:</h2>
+*** Using Compiler 'V6.19', folder: 'D:\Software\Work_software\Direct_coding\keil\ARM\ARMCLANG\Bin'
+Rebuild target 'qq111'
+assembling startup_stm32h723xx.s...
+compiling memorymap.c...
+../Core/Src/gpio.c(61): error: use of undeclared identifier 'BA_HIGHE9_Pin'
+  HAL_GPIO_WritePin(GPIOE, BA_HIGHE9_Pin|BA_LOW_Pin, GPIO_PIN_RESET);
+                           ^
+../Core/Src/gpio.c(67): error: use of undeclared identifier 'SC_HIGH_Pin'
+  HAL_GPIO_WritePin(GPIOC, FR_HIGH_Pin|FR_LOW_Pin|SC_HIGH_Pin, GPIO_PIN_RESET);
+                                                  ^
+../Core/Src/gpio.c(77): error: use of undeclared identifier 'BA_HIGHE9_Pin'
+  GPIO_InitStruct.Pin = BA_HIGHE9_Pin|BA_LOW_Pin;
+                        ^
+../Core/Src/gpio.c(91): error: use of undeclared identifier 'SC_HIGH_Pin'
+  GPIO_InitStruct.Pin = FR_HIGH_Pin|FR_LOW_Pin|SC_HIGH_Pin;
+                                               ^
+4 errors generated.
+compiling gpio.c...
+compiling stm32h7xx_hal_msp.c...
+compiling stm32h7xx_it.c...
+compiling adc.c...
+compiling main.c...
+compiling usart.c...
+../Core/Src/tim.c(381): error: use of undeclared identifier 'RB_C1_Pin'
+    GPIO_InitStruct.Pin = RB_C1_Pin|RB_C2_Pin;
+                          ^
+../Core/Src/tim.c(381): error: use of undeclared identifier 'RB_C2_Pin'
+    GPIO_InitStruct.Pin = RB_C1_Pin|RB_C2_Pin;
+                                    ^
+../Core/Src/tim.c(403): error: use of undeclared identifier 'LF_C1_Pin'
+    GPIO_InitStruct.Pin = LF_C1_Pin|LF_C2_Pin;
+                          ^
+../Core/Src/tim.c(403): error: use of undeclared identifier 'LF_C2_Pin'
+    GPIO_InitStruct.Pin = LF_C1_Pin|LF_C2_Pin;
+                                    ^
+../Core/Src/tim.c(425): error: use of undeclared identifier 'RF_1_Pin'
+    GPIO_InitStruct.Pin = RF_1_Pin|RF_2_Pin;
+                          ^
+../Core/Src/tim.c(425): error: use of undeclared identifier 'RF_2_Pin'
+    GPIO_InitStruct.Pin = RF_1_Pin|RF_2_Pin;
+                                   ^
+../Core/Src/tim.c(446): error: use of undeclared identifier 'SC_C1_Pin'
+    GPIO_InitStruct.Pin = SC_C1_Pin;
+                          ^
+../Core/Src/tim.c(451): error: use of undeclared identifier 'SC_C1_GPIO_Port'
+    HAL_GPIO_Init(SC_C1_GPIO_Port, &GPIO_InitStruct);
+                  ^
+../Core/Src/tim.c(468): error: use of undeclared identifier 'LB_C1_Pin'
+    GPIO_InitStruct.Pin = LB_C1_Pin|LB_C2_Pin;
+                          ^
+../Core/Src/tim.c(468): error: use of undeclared identifier 'LB_C2_Pin'
+    GPIO_InitStruct.Pin = LB_C1_Pin|LB_C2_Pin;
+                                    ^
+10 errors generated.
+compiling tim.c...
+compiling stm32h7xx_hal_rcc.c...
+compiling stm32h7xx_hal_hsem.c...
+compiling stm32h7xx_hal_gpio.c...
+compiling stm32h7xx_hal_adc_ex.c...
+compiling stm32h7xx_hal_flash.c...
+compiling stm32h7xx_hal_flash_ex.c...
+compiling stm32h7xx_hal_dma_ex.c...
+compiling stm32h7xx_hal_adc.c...
+compiling stm32h7xx_hal_pwr.c...
+compiling stm32h7xx_hal_rcc_ex.c...
+compiling stm32h7xx_hal_mdma.c...
+compiling stm32h7xx_hal_pwr_ex.c...
+compiling stm32h7xx_hal_cortex.c...
+compiling stm32h7xx_hal_dma.c...
+compiling stm32h7xx_hal.c...
+compiling stm32h7xx_hal_i2c_ex.c...
+compiling stm32h7xx_hal_exti.c...
+compiling base64.c...
+compiling system_stm32h7xx.c...
+compiling stm32h7xx_hal_uart_ex.c...
+compiling esp8266.c...
+../hardware/motor.c(148): error: use of undeclared identifier 'SC_HIGH_GPIO_Port'
+        HAL_GPIO_WritePin(SC_HIGH_GPIO_Port, SC_HIGH_Pin, GPIO_PIN_RESET);
+                          ^
+../hardware/motor.c(148): error: use of undeclared identifier 'SC_HIGH_Pin'
+        HAL_GPIO_WritePin(SC_HIGH_GPIO_Port, SC_HIGH_Pin, GPIO_PIN_RESET);
+                                             ^
+../hardware/motor.c(165): error: use of undeclared identifier 'SC_HIGH_GPIO_Port'
+        HAL_GPIO_WritePin(SC_HIGH_GPIO_Port, SC_HIGH_Pin, GPIO_PIN_SET);
+                          ^
+../hardware/motor.c(165): error: use of undeclared identifier 'SC_HIGH_Pin'
+        HAL_GPIO_WritePin(SC_HIGH_GPIO_Port, SC_HIGH_Pin, GPIO_PIN_SET);
+                                             ^
+../hardware/motor.c(195): error: use of undeclared identifier 'SC_HIGH_GPIO_Port'
+        HAL_GPIO_WritePin(SC_HIGH_GPIO_Port, SC_HIGH_Pin, GPIO_PIN_RESET);
+                          ^
+../hardware/motor.c(195): error: use of undeclared identifier 'SC_HIGH_Pin'
+        HAL_GPIO_WritePin(SC_HIGH_GPIO_Port, SC_HIGH_Pin, GPIO_PIN_RESET);
+                                             ^
+6 errors generated.
+compiling motor.c...
+compiling hmac_sha1.c...
+compiling stm32h7xx_hal_tim_ex.c...
+../hardware/onenet.c(344): warning: illegal character encoding in string literal [-Winvalid-source-encoding]
+                                        case 0:HAL_UART_Printf(USART_DEBUG, "Tips:      <C1><AC><BD>ӳɹ<A6>\r\n");status = 0;break;
+                                                                                        ^~~~~~~~~~~~  ~~~~
+../hardware/onenet.c(346): warning: illegal character encoding in string literal [-Winvalid-source-encoding]
+                                        case 1:HAL_UART_Printf(USART_DEBUG, "WARN:      <C1><AC><BD><D3>ʧ<B0>ܣ<BA>Э<D2><E9><B4><ED><CE><F3>\r\n");break;
+                                                                                        ^~~~~~~~~~~~~~~~ ~~~~ ~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~
+../hardware/onenet.c(347): warning: illegal character encoding in string literal [-Winvalid-source-encoding]
+                                        case 2:HAL_UART_Printf(USART_DEBUG, "WARN:      <C1><AC><BD><D3>ʧ<B0>ܣ<BA><B7>Ƿ<A8><B5><C4>clientid\r\n");break;
+                                                                                        ^~~~~~~~~~~~~~~~ ~~~~ ~~~~~~~~ ~~~~~~~~~~~~
+../hardware/onenet.c(348): warning: illegal character encoding in string literal [-Winvalid-source-encoding]
+                                        case 3:HAL_UART_Printf(USART_DEBUG, "WARN:      <C1><AC><BD><D3>ʧ<B0>ܣ<BA><B7><FE><CE><F1><C6><F7>ʧ<B0><DC>\r\n");break;
+                                                                                        ^~~~~~~~~~~~~~~~ ~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ~~~~~~~~
+../hardware/onenet.c(349): warning: illegal character encoding in string literal [-Winvalid-source-encoding]
+                                        case 4:HAL_UART_Printf(USART_DEBUG, "WARN:      <C1><AC><BD><D3>ʧ<B0>ܣ<BA><D3>û<A7><C3><FB><BB><F2><C3><DC><C2><EB><B4><ED><CE><F3>\r\n");break;
+                                                                                        ^~~~~~~~~~~~~~~~ ~~~~ ~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../hardware/onenet.c(350): warning: illegal character encoding in string literal [-Winvalid-source-encoding]
+                                        case 5:HAL_UART_Printf(USART_DEBUG, "WARN:      <C1><AC><BD><D3>ʧ<B0>ܣ<BA><B7>Ƿ<A8><C1><B4><BD><D3>(<B1><C8><C8><E7>token<B7>Ƿ<A8>)\r\n");break;
+                                                                                        ^~~~~~~~~~~~~~~~ ~~~~ ~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~     ~~~~ ~~~~
+../hardware/onenet.c(352): warning: illegal character encoding in string literal [-Winvalid-source-encoding]
+                                        default:HAL_UART_Printf(USART_DEBUG, "ERR:      <C1><AC><BD><D3>ʧ<B0>ܣ<BA>δ֪<B4><ED><CE><F3>\r\n");break;
+                                                                                        ^~~~~~~~~~~~~~~~ ~~~~ ~~~~ ~~~~~~~~~~~~~~~~
+7 warnings generated.
+compiling onenet.c...
+compiling ctrl.c...
+compiling MqttKit.c...
+compiling stm32h7xx_hal_uart.c...
+compiling stm32h7xx_hal_tim.c...
+compiling stm32h7xx_hal_i2c.c...
+compiling cJSON.c...
+"qq111\qq111.axf" - 20 Error(s), 7 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: ARM
+                http://www.keil.com/pack/ARM.CMSIS.5.9.0.pack
+                ARM.CMSIS.5.9.0
+                CMSIS (Common Microcontroller Software Interface Standard)
+   * Component: CORE Version: 5.6.0
+
+Package Vendor: Keil
+                https://www.keil.com/pack/Keil.STM32H7xx_DFP.4.0.0.pack
+                Keil.STM32H7xx_DFP.4.0.0
+                STMicroelectronics STM32H7 Series Device Support
+
+<h2>Collection of Component include folders:</h2>
+  ./RTE/_qq111
+  D:/Software/Work_software/Direct_coding/keil/ARM/CMSIS/5.9.0/CMSIS/Core/Include
+
+<h2>Collection of Component Files used:</h2>
+
+   * Component: ARM::CMSIS:CORE:5.6.0
+Target not created.
+Build Time Elapsed:  00:00:03
+</pre>
+</body>
+</html>

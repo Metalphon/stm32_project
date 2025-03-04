@@ -1,0 +1,26 @@
+--cpu Cortex-M3
+"grand_design_base\startup_stm32f103xb.o"
+"grand_design_base\main.o"
+"grand_design_base\gpio.o"
+"grand_design_base\usart.o"
+"grand_design_base\stm32f1xx_it.o"
+"grand_design_base\stm32f1xx_hal_msp.o"
+"grand_design_base\stm32f1xx_hal_gpio_ex.o"
+"grand_design_base\stm32f1xx_hal_tim.o"
+"grand_design_base\stm32f1xx_hal_tim_ex.o"
+"grand_design_base\stm32f1xx_hal_uart.o"
+"grand_design_base\stm32f1xx_hal.o"
+"grand_design_base\stm32f1xx_hal_rcc.o"
+"grand_design_base\stm32f1xx_hal_rcc_ex.o"
+"grand_design_base\stm32f1xx_hal_gpio.o"
+"grand_design_base\stm32f1xx_hal_dma.o"
+"grand_design_base\stm32f1xx_hal_cortex.o"
+"grand_design_base\stm32f1xx_hal_pwr.o"
+"grand_design_base\stm32f1xx_hal_flash.o"
+"grand_design_base\stm32f1xx_hal_flash_ex.o"
+"grand_design_base\stm32f1xx_hal_exti.o"
+"grand_design_base\system_stm32f1xx.o"
+--library_type=microlib --strict --scatter "grand_Design_base\grand_Design_base.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "grand_Design_base.map" -o grand_Design_base\grand_Design_base.axf
