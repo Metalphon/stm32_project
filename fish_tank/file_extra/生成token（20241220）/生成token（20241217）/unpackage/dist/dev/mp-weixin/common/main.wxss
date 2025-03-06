@@ -1,0 +1,6 @@
+
+page {
+	   background-image:url(/static/2.jpg); /* 替换为你实际的背景图片路径 */
+}
+
+

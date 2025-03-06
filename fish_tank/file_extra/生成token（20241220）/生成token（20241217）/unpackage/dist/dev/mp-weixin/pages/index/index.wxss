@@ -1,0 +1,108 @@
+
+.wrap {
+	padding: 30rpx;
+}
+.dev-area {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	/* 自动换行 */
+}
+.dev-card {
+	/* 大卡片 */
+	height: 130rpx;
+	width: 300rpx;
+	border-radius: 30rpx;
+	/* 边框圆弧线 */
+	margin-top: 30rpx;
+	/* 设置元素的顶部外边距外边距区域。 */
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	box-shadow: 0 0 15rpx #000000;
+	/* 轮廓边框线 #cc为阴影*/
+	background-color: #fffcea;
+}
+
+/* 长设备卡片样式 */
+.device-cart-l {
+	height: 70rpx;
+	/* 设置高度为150像素 */
+	width: 700rpx;
+	/* 设置宽度为700像素 */
+	border-radius: 20rpx;
+	/* 设置边框圆角为30像素 */
+	margin-top: 40rpx;
+	/* 设置上外边距为30像素 */
+	display: flex;
+	/* 使用弹性盒子布局 */
+	justify-content: space-around;
+	/* 在弹性容器中均匀分布子元素，两端对齐 */
+	align-items: center;
+	/* 在弹性容器中垂直居中对齐子元素 */
+	box-shadow: 0 0 15rpx #000000;
+	/* 设置盒子阴影，颜色为灰色 */
+	background-color: #fffcea;
+}
+.dev-name {
+	/* 检测对象字体 */
+	font-size: 20rpx;
+	/* 字体大小 */
+	text-align: center;
+	/* 水平对齐 */
+	color: black;
+}
+.dev-name1 {
+	/* 检测对象字体 */
+	font-size: 40rpx;
+	/* 字体大小 */
+	text-align: center;
+	/* 水平对齐 */
+	color: red;
+}
+.dev-logo {
+	/* 小卡片logo */
+	height: 70rpx;
+	width: 70rpx;
+	margin-top: 10rpx;
+	/* 设置元素的顶部外边距外边距区域。 */
+}
+.dev-data {
+	/* 检测数据字体 */
+	font-size: 50rpx;
+	/* 字体大小 */
+	color: black;
+}
+._button {
+	margin-top: 10rpx;
+	width: 130rpx;
+	height: 50rpx;
+	line-height: 50rpx;
+}
+.title {
+	font-size: 40rpx;
+	color: black;
+}
+
+/* 滑动条样式 */
+.ctrl-slider {
+	color: black;
+	width: 580rpx;
+	/* 设置宽度为580像素 */
+	margin: 20rpx 0;
+	/* 上下添加20rpx的外边距，让滑动条在布局中有合适间隔 */
+}
+.ctrl-slider::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	background-color: #007BFF;
+	/* 拇指背景颜色设为蓝色 */
+	width: 30rpx;
+	/* 拇指宽度 */
+	height: 30rpx;
+	/* 拇指高度 */
+	border-radius: 50%;
+	/* 拇指设置为圆形 */
+	margin-top: -12rpx;
+	/* 调整拇指垂直方向位置，使其在轨道上居中，这里的值可能需要根据轨道和拇指实际尺寸微调 */
+}
+
