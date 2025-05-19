@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MQTT LED 控制</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .status-panel {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .status-value {
+            font-weight: bold;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 6px;
+            background-color: #3498db;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .btn:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        .btn-connect {
+            background-color: #2ecc71;
+        }
+        .btn-connect:hover {
+            background-color: #27ae60;
+        }
+        .btn-disconnect {
+            background-color: #e74c3c;
+        }
+        .btn-disconnect:hover {
+            background-color: #c0392b;
+        }
+        .btn-on {
+            background-color: #f39c12;
+        }
+        .btn-on:hover {
+            background-color: #d35400;
+        }
+        .btn-off {
+            background-color: #7f8c8d;
+        }
+        .btn-off:hover {
+            background-color: #2c3e50;
+        }
+        .log-container {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            font-family: monospace;
+        }
+        .log-entry {
+            margin-bottom: 5px;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+        .log-info {
+            color: #2ecc71;
+        }
+        .log-error {
+            color: #e74c3c;
+        }
+        .led-indicator {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            background-color: #7f8c8d;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        .led-on {
+            background-color: #f1c40f;
+            box-shadow: 0 0 20px rgba(241, 196, 15, 0.8);
+        }
+        .config-panel {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+        }
+        .config-item {
+            margin-bottom: 10px;
+        }
+        .config-item label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .config-item input, .config-item select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .json-input {
+            width: 100%;
+            height: 120px;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: monospace;
+            resize: vertical;
+        }
+        .json-panel {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+        }
+        .json-panel h2 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>MQTT LED 控制</h1>
+        
+        <div class="led-indicator" id="ledIndicator"></div>
+        
+        <div class="status-panel">
+            <div class="status-item">
+                <span>连接状态:</span>
+                <span class="status-value" id="connectionStatus">未连接</span>
+            </div>
+            <div class="status-item">
+                <span>LED 状态:</span>
+                <span class="status-value" id="ledStatus">关闭</span>
+            </div>
+        </div>
+        
+        <div class="config-panel">
+            <div class="config-item">
+                <label for="connectionType">连接类型:</label>
+                <select id="connectionType">
+                    <option value="ws">WebSocket (ws/wss)</option>
+                    <option value="tcp">TCP (通过代理)</option>
+                </select>
+            </div>
+            <div class="config-item">
+                <label for="brokerUrl">MQTT 服务器地址:</label>
+                <input type="text" id="brokerUrl" value="mqtts.heclouds.com">
+            </div>
+            <div class="config-item">
+                <label for="brokerPort">MQTT 服务器端口:</label>
+                <input type="number" id="brokerPort" value="1883">
+            </div>
+            <div class="config-item">
+                <label for="brokerPath">WebSocket 路径 (可选):</label>
+                <input type="text" id="brokerPath" value="/mqtt">
+            </div>
+            <div class="config-item">
+                <label for="useSSL">使用 SSL/TLS:</label>
+                <select id="useSSL">
+                    <option value="false" selected>否</option>
+                    <option value="true">是</option>
+                </select>
+            </div>
+            <div class="config-item">
+                <label for="clientId">客户端 ID:</label>
+                <input type="text" id="clientId" value="d1">
+            </div>
+        </div>
+        
+        <button class="btn btn-connect" id="connectBtn">连接</button>
+        <button class="btn btn-on" id="ledOnBtn" disabled>打开 LED</button>
+        <button class="btn btn-off" id="ledOffBtn" disabled>关闭 LED</button>
+        <button class="btn" id="toggleBtn" disabled>切换 LED 状态</button>
+        
+        <div class="json-panel">
+            <h2>直接通过 JSON 控制 LED</h2>
+            <textarea class="json-input" id="jsonInput" placeholder='输入 JSON 数据，例如:
+{
+    "id": "123",
+    "version": "1.0",
+    "params": {
+        "led": {
+            "value": true,
+            "time": 1706673129818
+        }
+    }
+}'></textarea>
+            <button class="btn" id="applyJsonBtn">应用 JSON 数据</button>
+        </div>
+        
+        <div class="log-container" id="logContainer"></div>
+    </div>
+
+    <!-- 引入 MQTT.js 库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
+    
+    <script>
+        // MQTT 默认配置
+        const USER_NAME = "f04YhrRc9T";  // 产品名
+        const PASSWORD = "version=2018-10-31&res=products%2Ff04YhrRc9T%2Fdevices%2Fd1&et=2042093691&method=md5&sign=xDPyAWq9Zb%2FsFzqSbniJ8g%3D%3D";  // token
+
+        // 主题配置
+        const TOPIC_PROPERTY = `$sys/${USER_NAME}/d1/thing/property/post`;
+        const TOPIC_PROPERTY_REPLY = `$sys/${USER_NAME}/d1/thing/property/post/reply`;
+        const TOPIC_CMD = `$sys/${USER_NAME}/d1/thing/command/invoke`;
+        const TOPIC_CMD_RESP = `$sys/${USER_NAME}/d1/thing/command/invoke/response`;
+
+        // 全局变量
+        let mqttClient = null;
+        let isConnected = false;
+        let ledState = false;
+
+        // DOM 元素
+        const connectBtn = document.getElementById('connectBtn');
+        const ledOnBtn = document.getElementById('ledOnBtn');
+        const ledOffBtn = document.getElementById('ledOffBtn');
+        const toggleBtn = document.getElementById('toggleBtn');
+        const connectionStatus = document.getElementById('connectionStatus');
+        const ledStatus = document.getElementById('ledStatus');
+        const logContainer = document.getElementById('logContainer');
+        const ledIndicator = document.getElementById('ledIndicator');
+        const jsonInput = document.getElementById('jsonInput');
+        const applyJsonBtn = document.getElementById('applyJsonBtn');
+        
+        // 配置面板元素
+        const connectionTypeSelect = document.getElementById('connectionType');
+        const brokerUrlInput = document.getElementById('brokerUrl');
+        const brokerPortInput = document.getElementById('brokerPort');
+        const brokerPathInput = document.getElementById('brokerPath');
+        const useSSLSelect = document.getElementById('useSSL');
+        const clientIdInput = document.getElementById('clientId');
+
+        // 日志函数
+        function log(message, type = 'info') {
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry log-${type}`;
+            const timestamp = new Date().toLocaleTimeString();
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+            console.log(`[${type}] ${message}`);
+        }
+
+        // 更新 UI 状态
+        function updateUI() {
+            connectionStatus.textContent = isConnected ? '已连接' : '未连接';
+            ledStatus.textContent = ledState ? '开启' : '关闭';
+            
+            if (isConnected) {
+                connectBtn.textContent = '断开连接';
+                connectBtn.className = 'btn btn-disconnect';
+                ledOnBtn.disabled = false;
+                ledOffBtn.disabled = false;
+                toggleBtn.disabled = false;
+                
+                // 禁用配置面板
+                connectionTypeSelect.disabled = true;
+                brokerUrlInput.disabled = true;
+                brokerPortInput.disabled = true;
+                brokerPathInput.disabled = true;
+                useSSLSelect.disabled = true;
+                clientIdInput.disabled = true;
+            } else {
+                connectBtn.textContent = '连接';
+                connectBtn.className = 'btn btn-connect';
+                ledOnBtn.disabled = true;
+                ledOffBtn.disabled = true;
+                toggleBtn.disabled = true;
+                
+                // 启用配置面板
+                connectionTypeSelect.disabled = false;
+                brokerUrlInput.disabled = false;
+                brokerPortInput.disabled = false;
+                brokerPathInput.disabled = false;
+                useSSLSelect.disabled = false;
+                clientIdInput.disabled = false;
+            }
+            
+            if (ledState) {
+                ledIndicator.classList.add('led-on');
+            } else {
+                ledIndicator.classList.remove('led-on');
+            }
+        }
+
+        // 连接到 MQTT 服务器
+        function connectMQTT() {
+            try {
+                // 获取配置
+                const connectionType = connectionTypeSelect.value;
+                const brokerUrl = brokerUrlInput.value.trim();
+                const brokerPort = parseInt(brokerPortInput.value);
+                const brokerPath = brokerPathInput.value.trim();
+                const useSSL = useSSLSelect.value === 'true';
+                const clientId = clientIdInput.value.trim() || "d1";
+                
+                if (!brokerUrl) {
+                    log('请输入 MQTT 服务器地址', 'error');
+                    return;
+                }
+                
+                if (isNaN(brokerPort) || brokerPort <= 0 || brokerPort > 65535) {
+                    log('请输入有效的端口号 (1-65535)', 'error');
+                    return;
+                }
+                
+                log(`正在连接到 MQTT 服务器 ${brokerUrl}:${brokerPort}...`);
+                log(`使用客户端 ID: ${clientId}`);
+                
+                // 创建 MQTT 客户端实例
+                mqttClient = new Paho.MQTT.Client(
+                    brokerUrl, 
+                    brokerPort, 
+                    brokerPath,
+                    clientId  // 设备名称 d1
+                );
+                
+                // 设置回调函数
+                mqttClient.onConnectionLost = onConnectionLost;
+                mqttClient.onMessageArrived = onMessageArrived;
+                
+                // 连接选项
+                const options = {
+                    useSSL: useSSL,
+                    onSuccess: onConnect,
+                    onFailure: onConnectFailure,
+                    timeout: 30
+                };
+                
+                // 添加用户名和密码（如果使用 HECloud）
+                if (brokerUrl.includes('heclouds.com')) {
+                    options.userName = USER_NAME;  // 平台分配的产品ID f04YhrRc9T
+                    options.password = PASSWORD;   // token
+                    log('使用 HECloud 凭证进行连接:');
+                    log('- 客户端 ID: ' + clientId + ' (设备名称)');
+                    log('- 用户名: ' + USER_NAME + ' (产品ID)');
+                    log('- 密码: token (已配置)');
+                }
+                
+                // 连接到服务器
+                mqttClient.connect(options);
+            } catch (error) {
+                log(`连接错误: ${error.message}`, 'error');
+            }
+        }
+
+        // 连接成功回调
+        function onConnect() {
+            isConnected = true;
+            log('已成功连接到 MQTT 服务器');
+            
+            // 订阅主题
+            mqttClient.subscribe(TOPIC_PROPERTY_REPLY);
+            log(`已订阅主题: ${TOPIC_PROPERTY_REPLY}`);
+            
+            mqttClient.subscribe(TOPIC_CMD);
+            log(`已订阅主题: ${TOPIC_CMD}`);
+            
+            updateUI();
+        }
+
+        // 连接失败回调
+        function onConnectFailure(error) {
+            isConnected = false;
+            log(`连接失败: ${error.errorMessage}`, 'error');
+            log('请尝试以下解决方案:', 'error');
+            log('1. 检查服务器地址和端口是否正确', 'error');
+            log('2. 如果使用 WSS，请确保选择了"使用 SSL/TLS"', 'error');
+            log('3. 尝试使用公共 MQTT 服务器进行测试，如 broker.emqx.io:8083', 'error');
+            updateUI();
+        }
+
+        // 连接断开回调
+        function onConnectionLost(response) {
+            isConnected = false;
+            if (response.errorCode !== 0) {
+                log(`连接断开: ${response.errorMessage}`, 'error');
+            } else {
+                log('已断开与 MQTT 服务器的连接');
+            }
+            updateUI();
+        }
+
+        // 收到消息回调
+        function onMessageArrived(message) {
+            try {
+                const topic = message.destinationName;
+                const payload = message.payloadString;
+                log(`收到消息 [${topic}]: ${payload}`);
+                
+                // 解析 JSON 数据
+                const data = JSON.parse(payload);
+                
+                // 处理属性上报回复
+                if (topic === TOPIC_PROPERTY_REPLY) {
+                    if (data.code === 200 && payload.includes('led')) {
+                        if (payload.toLowerCase().includes('true')) {
+                            ledState = true;
+                            log('LED 状态已更新为: 开启');
+                        } else if (payload.toLowerCase().includes('false')) {
+                            ledState = false;
+                            log('LED 状态已更新为: 关闭');
+                        }
+                        updateUI();
+                    }
+                }
+                
+                // 处理命令下发
+                if (topic === TOPIC_CMD) {
+                    handleCommand(data);
+                }
+            } catch (error) {
+                log(`处理消息时出错: ${error.message}`, 'error');
+            }
+        }
+
+        // 处理命令
+        function handleCommand(data) {
+            try {
+                const cmdId = data.id;
+                const cmdName = data.params?.cmdName || '';
+                const cmdParams = data.params?.cmdParams || {};
+                
+                log(`收到命令: ${cmdName}, 参数: ${JSON.stringify(cmdParams)}`);
+                
+                // 构建命令响应
+                const response = {
+                    id: cmdId,
+                    code: 200,
+                    msg: "success",
+                    data: {
+                        result: `命令 ${cmdName} 已执行成功`
+                    }
+                };
+                
+                // 发送命令响应
+                publishMessage(TOPIC_CMD_RESP, response);
+                log(`已发送命令响应: ${JSON.stringify(response)}`);
+            } catch (error) {
+                log(`处理命令时出错: ${error.message}`, 'error');
+            }
+        }
+
+        // 断开连接
+        function disconnectMQTT() {
+            if (mqttClient && isConnected) {
+                try {
+                    mqttClient.disconnect();
+                    log('已断开与 MQTT 服务器的连接');
+                    isConnected = false;
+                    updateUI();
+                } catch (error) {
+                    log(`断开连接时出错: ${error.message}`, 'error');
+                }
+            }
+        }
+
+        // 发布消息
+        function publishMessage(topic, message) {
+            if (!mqttClient || !isConnected) {
+                log('未连接到 MQTT 服务器，无法发送消息', 'error');
+                return;
+            }
+            
+            try {
+                const payload = JSON.stringify(message);
+                const mqttMessage = new Paho.MQTT.Message(payload);
+                mqttMessage.destinationName = topic;
+                mqttMessage.qos = 0;
+                mqttMessage.retained = false;
+                
+                mqttClient.send(mqttMessage);
+                log(`消息已发送到主题 [${topic}]: ${payload}`);
+            } catch (error) {
+                log(`发送消息时出错: ${error.message}`, 'error');
+            }
+        }
+
+        // 控制 LED
+        function controlLED(state) {
+            if (!mqttClient || !isConnected) {
+                log('未连接到 MQTT 服务器，无法控制 LED', 'error');
+                return;
+            }
+            
+            try {
+                const currentTime = Date.now();
+                
+                const message = {
+                    id: String(Math.floor(Date.now() / 1000)),
+                    version: "1.0",
+                    params: {
+                        led: {
+                            value: state,
+                            time: currentTime
+                        }
+                    }
+                };
+                
+                publishMessage(TOPIC_PROPERTY, message);
+                log(`LED 状态设置请求已发送: ${state ? '开启' : '关闭'}`);
+                
+                // 预先更新 UI，实际状态将在收到回复后确认
+                ledState = state;
+                updateUI();
+            } catch (error) {
+                log(`控制 LED 时出错: ${error.message}`, 'error');
+            }
+        }
+
+        // 通过 JSON 数据控制 LED
+        function controlLEDWithJson(jsonData) {
+            try {
+                log('正在处理 JSON 数据...');
+                
+                // 解析 JSON 数据
+                const data = JSON.parse(jsonData);
+                log(`已解析 JSON 数据: ${JSON.stringify(data, null, 2)}`);
+                
+                // 查找 LED 状态
+                let newLedState = null;
+                
+                // 检查 params.led.value
+                if (data.params && data.params.led && data.params.led.value !== undefined) {
+                    newLedState = Boolean(data.params.led.value);
+                    log(`在 params.led.value 中找到 LED 状态: ${newLedState}`);
+                }
+                // 检查 params.Power.value
+                else if (data.params && data.params.Power && data.params.Power.value !== undefined) {
+                    // 尝试将 Power 值转换为布尔值
+                    const powerValue = data.params.Power.value;
+                    if (typeof powerValue === 'boolean') {
+                        newLedState = powerValue;
+                    } else if (typeof powerValue === 'string') {
+                        // 如果是字符串，尝试解析为布尔值或数字
+                        if (powerValue.toLowerCase() === 'true') {
+                            newLedState = true;
+                        } else if (powerValue.toLowerCase() === 'false') {
+                            newLedState = false;
+                        } else {
+                            // 尝试将字符串解析为数字，非零为 true
+                            const numValue = parseFloat(powerValue);
+                            if (!isNaN(numValue)) {
+                                newLedState = numValue !== 0;
+                            }
+                        }
+                    } else if (typeof powerValue === 'number') {
+                        // 如果是数字，非零为 true
+                        newLedState = powerValue !== 0;
+                    }
+                    
+                    if (newLedState !== null) {
+                        log(`在 params.Power.value 中找到 LED 状态: ${newLedState}`);
+                    }
+                }
+                
+                // 如果找到了 LED 状态，更新 UI
+                if (newLedState !== null) {
+                    ledState = newLedState;
+                    log(`LED 状态已通过 JSON 数据更新为: ${ledState ? '开启' : '关闭'}`);
+                    updateUI();
+                } else {
+                    log('在 JSON 数据中未找到 LED 状态', 'error');
+                    log('请确保 JSON 包含 params.led.value 或 params.Power.value', 'error');
+                }
+            } catch (error) {
+                log(`处理 JSON 数据时出错: ${error.message}`, 'error');
+            }
+        }
+
+        // 事件监听器
+        connectBtn.addEventListener('click', function() {
+            if (isConnected) {
+                disconnectMQTT();
+            } else {
+                connectMQTT();
+            }
+        });
+
+        ledOnBtn.addEventListener('click', function() {
+            controlLED(true);
+        });
+
+        ledOffBtn.addEventListener('click', function() {
+            controlLED(false);
+        });
+
+        toggleBtn.addEventListener('click', function() {
+            controlLED(!ledState);
+        });
+
+        applyJsonBtn.addEventListener('click', function() {
+            const jsonData = jsonInput.value.trim();
+            if (jsonData) {
+                controlLEDWithJson(jsonData);
+            } else {
+                log('请输入 JSON 数据', 'error');
+            }
+        });
+
+        // 初始化 UI
+        updateUI();
+        log('MQTT LED 控制应用已初始化');
+        log('请配置 MQTT 服务器连接参数并点击"连接"按钮');
+        log('提示: 连接到 HECloud 时，将自动使用产品名和 token 作为凭证');
+        log('提示: 如果使用 WebSocket 连接，请确保服务器支持 WebSocket 协议');
+        log('提示: 如果连接失败，请尝试更改端口或使用 SSL/TLS');
+    </script>
+</body>
+</html> 

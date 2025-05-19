@@ -1,5 +1,6 @@
 --cpu=Cortex-M4.fp.sp
 "new\startup_stm32f407xx.o"
+"new\sensor.o"
 "new\main.o"
 "new\gpio.o"
 "new\adc.o"
@@ -7,7 +8,6 @@
 "new\usart.o"
 "new\stm32f4xx_it.o"
 "new\stm32f4xx_hal_msp.o"
-"new\sensor.o"
 "new\stm32f4xx_hal_adc.o"
 "new\stm32f4xx_hal_adc_ex.o"
 "new\stm32f4xx_ll_adc.o"

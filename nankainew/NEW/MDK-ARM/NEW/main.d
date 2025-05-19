@@ -34,4 +34,7 @@ new/main.o: ..\Core\Src\main.c ..\Core\Inc\main.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_uart.h \
   ..\Core\Inc\adc.h ..\Core\Inc\tim.h ..\Core\Inc\usart.h \
   D:\Software\Work_software\Direct_coding\keil\ARM\ARMCLANG\Bin\..\include\stdio.h \
-  ..\Core\Inc\gpio.h ..\Core\Inc\sensor.h
+  ..\Core\Inc\gpio.h \
+  D:\Software\Work_software\Direct_coding\keil\ARM\ARMCLANG\Bin\..\include\string.h \
+  D:\Software\Work_software\Direct_coding\keil\ARM\ARMCLANG\Bin\..\include\ctype.h \
+  ..\Core\Inc\sensor.h
